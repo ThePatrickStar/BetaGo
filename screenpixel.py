@@ -34,8 +34,8 @@ class ScreenPixel(object):
         self._data = CG.CGDataProviderCopyData(prov)
 
         # Get width/height of image
-        self.width = CG.CGImageGetWidth(image)
-        self.height = CG.CGImageGetHeight(image)
+        # self.width = CG.CGImageGetWidth(image)
+        # self.height = CG.CGImageGetHeight(image)
 
     def pixel(self, x, y):
         """Get pixel value at given (x,y) screen coordinates

@@ -33,20 +33,19 @@ class Finger (threading.Thread):
 
     def run(self):
         while True:
-            try:
-                if self.hand.stop:
-                    break
-                else:
-                    lock.acquire()
-                    self.sp.capture(self.left_border + self.board_width * (self.num * 2 + 1) / 8, self.mouse_y)
-                    lock.release()
-                    color = self.sp.pixel(0, 0)
-                    if deserve_click(color):
-                        pyautogui.press(FINGER_KEY[self.num])
-                    # if deserve_stop(color):
-                    #     self.hand.stop_fingers()
-            except (KeyboardInterrupt, EOFError):
+            if self.hand.stop:
                 break
+            else:
+                mouse_x, mouse_y = pyautogui.position()
+                self.mouse_y = mouse_y - 2
+                lock.acquire()
+                self.sp.capture(self.left_border + self.board_width * (self.num * 2 + 1) / 8, self.mouse_y)
+                lock.release()
+                color = self.sp.pixel(0, 0)
+                if deserve_click(color):
+                    pyautogui.press(FINGER_KEY[self.num])
+                # if deserve_stop(color):
+                #     self.hand.stop_fingers()
 
 
 class Hand (object):
@@ -55,3 +54,4 @@ class Hand (object):
 
     def stop_fingers(self):
         self.stop = True
+        print 'fingers stopped'

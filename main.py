@@ -30,7 +30,6 @@ def main():
     print 'exit with ^C or ^D'
     left_border = -1
     right_border = -1
-    sp = ScreenPixel()
     with raw_mode(sys.stdin):
         hand = Hand()
         try:
@@ -57,7 +56,7 @@ def main():
                     board_width = right_border - left_border
                     if board_width > 0:
                         mouse_x, mouse_y = pyautogui.position()
-                        mouse_y -= 5
+                        mouse_y -= 2
 
                         sp0 = ScreenPixel()
                         sp1 = ScreenPixel()
@@ -71,26 +70,6 @@ def main():
                         finger1.start()
                         finger2.start()
                         finger3.start()
-                        # while True:
-                        #     # mouse_x, mouse_y = pyautogui.position()
-                        #
-                        #     sp.capture(left_border+board_width/8, mouse_y)
-                        #     color0 = sp.pixel(0, 0)
-                        #     sp.capture(left_border+board_width*3/8, mouse_y)
-                        #     color1 = sp.pixel(0, 0)
-                        #     sp.capture(left_border+board_width*5/8, mouse_y)
-                        #     color2 = sp.pixel(0, 0)
-                        #     sp.capture(left_border+board_width*7/8, mouse_y)
-                        #     color3 = sp.pixel(0, 0)
-                        #
-                        #     if deserve_click(color0):
-                        #         pyautogui.press('d')
-                        #     if deserve_click(color1):
-                        #         pyautogui.press('f')
-                        #     if deserve_click(color2):
-                        #         pyautogui.press('j')
-                        #     if deserve_click(color3):
-                        #         pyautogui.press('k')
                     else:
                         print 'wrong board width, use \'l\' and \'r\' properly again ... '
                 else:
