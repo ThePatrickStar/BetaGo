@@ -1,5 +1,6 @@
 import threading
 import pyautogui
+from screenpixel import ScreenPixel
 
 
 FINGER_KEY = ['d', 'f', 'j', 'k']
@@ -22,14 +23,13 @@ def deserve_stop(rgb):
 
 
 class Finger (threading.Thread):
-    def __init__(self, sp, left_border, board_width, mouse_y, hand, num):
+    def __init__(self, sp, left_border, board_width, hand, num):
         threading.Thread.__init__(self)
         self.sp = sp
         self.left_border = left_border
         self.board_width = board_width
         self.hand = hand
         self.num = num
-        self.mouse_y = mouse_y
 
     def run(self):
         while True:
@@ -37,11 +37,11 @@ class Finger (threading.Thread):
                 break
             else:
                 mouse_x, mouse_y = pyautogui.position()
-                self.mouse_y = mouse_y - 2
+                mouse_y -= 5
                 lock.acquire()
-                self.sp.capture(self.left_border + self.board_width * (self.num * 2 + 1) / 8, self.mouse_y)
+                self.sp.capture(self.left_border + self.board_width * (self.num * 2 + 1) / 8, mouse_y)
                 lock.release()
-                color = self.sp.pixel(0, 0)
+                color = self.sp.pixel()
                 if deserve_click(color):
                     pyautogui.press(FINGER_KEY[self.num])
                 # if deserve_stop(color):
@@ -51,7 +51,20 @@ class Finger (threading.Thread):
 class Hand (object):
     def __init__(self):
         self.stop = False
+        self.fingers = []
+
+    def setup_fingers(self, left_border, board_width):
+        self.fingers = []
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 0))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 1))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 2))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 3))
 
     def stop_fingers(self):
         self.stop = True
         print 'fingers stopped'
+
+    def start_fingers(self):
+        for finger in self.fingers:
+            finger.start()
+        print 'fingers started'
