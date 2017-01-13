@@ -23,23 +23,22 @@ def deserve_stop(rgb):
 
 
 class Finger (threading.Thread):
-    def __init__(self, sp, left_border, board_width, hand, num):
+    def __init__(self, sp, left_border, board_width, hand, num, baseline):
         threading.Thread.__init__(self)
         self.sp = sp
         self.left_border = left_border
         self.board_width = board_width
         self.hand = hand
         self.num = num
+        self.baseline = baseline
 
     def run(self):
         while True:
             if self.hand.stop:
                 break
             else:
-                mouse_x, mouse_y = pyautogui.position()
-                mouse_y -= 5
                 lock.acquire()
-                self.sp.capture(self.left_border + self.board_width * (self.num * 2 + 1) / 8, mouse_y)
+                self.sp.capture(self.left_border + self.board_width * (self.num * 2 + 1) / 8, self.baseline)
                 lock.release()
                 color = self.sp.pixel()
                 if deserve_click(color):
@@ -53,12 +52,12 @@ class Hand (object):
         self.stop = False
         self.fingers = []
 
-    def setup_fingers(self, left_border, board_width):
+    def setup_fingers(self, left_border, board_width, baseline):
         self.fingers = []
-        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 0))
-        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 1))
-        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 2))
-        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 3))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 0, baseline))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 1, baseline))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 2, baseline))
+        self.fingers.append(Finger(ScreenPixel(), left_border, board_width, self, 3, baseline))
 
     def stop_fingers(self):
         self.stop = True
