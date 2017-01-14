@@ -8,7 +8,7 @@ lock = threading.Lock()
 
 
 def deserve_click(rgb):
-    if rgb[0] < 10 and rgb[1] < 10 and rgb[2] < 10:
+    if rgb[0] < 15 and rgb[1] < 15 and rgb[2] < 15:
         # or (rgb[0] > 250 and 175 < rgb[1] < 185 and rgb[2] < 8)
         return True
     else:
